@@ -5,21 +5,23 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class Article extends Model
+class Comment extends Model
 {
-    protected $fillable = ['title', 'body'];
+    protected $fillable = ['text'];
+
 
     public static function boot(){
         parent::boot();
-        static::creating(function ($article) {
-            $article->user_id = Auth::id();
+        static::creating(function ($comment) {
+            $comment->user_id = Auth::id();
         });
     }
 
-    public function comments(){
-        return $this->hasMany('App\Comment');
-    }
     public function user(){
         return $this->belongsTo('App\User');
+    }
+
+    public function article(){
+        return $this->belongsTo('App\Article');
     }
 }
