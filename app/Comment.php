@@ -12,8 +12,8 @@ class Comment extends Model
 
     public static function boot(){
         parent::boot();
-        static::creating(function ($comment) {
-            $comment->user_id = Auth::id();
+        static::creating(function ($comments) {
+            $comments->user_id = Auth::id();
         });
     }
 

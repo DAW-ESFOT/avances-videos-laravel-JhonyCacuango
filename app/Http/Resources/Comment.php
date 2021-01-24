@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Resources;
+use App\Category;
+use App\User;
+
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,9 +20,8 @@ class Comment extends JsonResource
         return [
             'id' => $this->id,
             'text' => $this->text,
-
-            'user' => "/api/users".User::find($this->user_id),
-            'article' => "/api/article".$this->category_id,
+            'user' => "/api/users".$this->user_id,
+            'article' => "/api/article".$this->article_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
