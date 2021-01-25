@@ -6,13 +6,16 @@ use App\Comment;
 use App\Article;
 use App\Http\Resources\Comment as CommentResource;
 
+use App\Mail\NewComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param Article $article
      * @return \Illuminate\Http\Response
      */
     public function index(Article $article)
@@ -24,14 +27,15 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Comment  $comments
+     * @param Article $article
+     * @param \App\Comment $comments
      * @return \Illuminate\Http\Response
      */
     public function show(Article $article, Comment $comments)
     {
         $comments = $article->comments()->where('id', $comments->id)->firstOrFail();
 
-        return response()->json($comments,200);
+        return response()->json(new CommentResource($comments),200);
     }
 
 
@@ -47,18 +51,19 @@ class CommentController extends Controller
         $request->validate([
             'text'=>'required|string'
         ]);
-        $comment =$article->comments()->save(new Comment ($request->all()));
-        return response()->json($comment, 201);
+        $comments =$article->comments()->save(new Comment ($request->all()));
+        //Mail::to($article->user)->send(new NewComment($comment));
+        return response()->json(new CommentResource($comments), 201);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Comment  $comment
+     * @param  \App\Comment  $comments
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comments)
     {
         //
     }
@@ -67,10 +72,10 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Comment  $comment
+     * @param  \App\Comment  $comments
      * @return \Illuminate\Http\Response
      */
-    public function delete (Comment $comment)
+    public function delete (Comment $comments)
     {
         //
     }
